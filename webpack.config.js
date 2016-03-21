@@ -14,7 +14,7 @@ module.exports = {
     extensions: ['', '.ts', '.js']
   },
   output: {
-    path: './grails-app/assets/javascripts/app/', // TODO: Initial attempt at placing output file outside of asset pipeline failed, try again
+    path: './grails-app/assets/javascripts/app/',
     filename: 'app.js'
   },
   module: {

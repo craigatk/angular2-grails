@@ -13,6 +13,12 @@ buildscript {
     }
 }
 
+plugins {
+    // Gradle/Node plugin that allows us to easily execute NPM commands from Gradle
+    // https://github.com/srs/gradle-node-plugin
+    id "com.moowork.node" version "0.12"
+}
+
 version "0.1"
 group "angular2.grails"
 
@@ -62,8 +68,39 @@ dependencies {
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
 }
 
+// Configure the Gradle-Node plugin
+node {
+    // Version of node to use.
+    version = '0.12.7'
+
+    // Version of npm to use.
+    npmVersion = '2.12.1'
+
+    // Base URL for fetching node distributions (change if you have a mirror).
+    distBaseUrl = 'https://nodejs.org/dist'
+
+    // If true, it will download node using above parameters.
+    // If false, it will try to use globally installed node.
+    download = true
+
+    // Set the work directory for unpacking node
+    workDir = file("${project.buildDir}/nodejs")
+
+    // Set the work directory where node_modules should be located
+    nodeModulesDir = file("${project.projectDir}")
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = gradleWrapperVersion
+}
+
+task webpackDevBuild(type: NpmTask, dependsOn: npmInstall) {
+    args = ['run-script', 'webpack-dev-build']
+}
+bootRun.dependsOn webpackDevBuild
+
+task webpackWatch(type: NpmTask, dependsOn: npmInstall) {
+    args = ['run-script', 'webpack-watch']
 }
 
 assets {
